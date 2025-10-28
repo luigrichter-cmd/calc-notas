@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Calculadora de Notas • P2 e Média Anual</title>
+<meta name="description" content="Calculadora profissional para P2 mínima e Média Anual. Fórmulas: T3=(P1+P2+2·S)/2 e MA=(2·T1+2·T2+3·T3)/7." />
+<style>
+  :root{
+    --bg:#0f1226;
+    --bg2:#0a0c1a;
+    --card:#11162e;
+    --card-2:#0f1430;
+    --txt:#e8edf9;
+    --muted:#a7b0d1;
+    --line:#1e2647;
+    --brand1:#6aa5ff;
+    --brand2:#7ef7d4;
+    --brand3:#b388ff;
+    --ok:#27c175;
+    --warn:#ffb020;
+    --bad:#ff5a5f;
+    --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--txt); background: radial-gradient(1200px 800px at 10% -10%, #1a1f46 0%, rgba(26,31,70,0) 60%) , radial-gradient(1000px 800px at 110% 10%, #172552 0%, rgba(23,37,82,0) 60%) , linear-gradient(#0b0e21,#090b1b);
+    font:16px/1.45 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    overflow-x:hidden;
+  }
+
+  /* Orbes animadas de fundo */
+  .orb{position:fixed; border-radius:50%; filter:blur(40px); opacity:.35; z-index:-1; mix-blend-mode:screen}
+  .o1{width:420px;height:420px; background:radial-gradient(circle at 30% 30%, #6aa5ff, transparent 60%); top:-120px; left:-80px; animation:float 14s ease-in-out infinite}
+  .o2{width:500px;height:500px; background:radial-gradient(circle at 70% 40%, #7ef7d4, transparent 55%); bottom:-140px; right:-120px; animation:float2 16s ease-in-out infinite}
+  .o3{width:380px;height:380px; background:radial-gradient(circle at 50% 50%, #b388ff, transparent 60%); top:40%; left:60%; animation:float3 18s ease-in-out infinite}
+
+  @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(30px) translateX(20px)}}
+  @keyframes float2{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-25px) translateX(-30px)}}
+  @keyframes float3{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(20px) translateX(-25px)}}
+
+  header{padding:28px 16px 10px; text-align:center}
+  .title{font-weight:800; letter-spacing:.2px; margin:0; font-size:clamp(22px,3.5vw,30px)}
+  .sub{margin:6px 0 0; color:var(--muted); font-size:14px}
+
+  .wrap{max-width:1100px; margin:0 auto; padding:18px 16px 40px}
+  .grid{display:grid; grid-template-columns: 1.35fr .65fr; gap:18px}
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)) , var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+
+  .card .hd{padding:16px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px}
+  .card .hd h2{margin:0; font-size:16px; letter-spacing:.2px}
+  .card .bd{padding:18px}
+
+  label{display:block; font-size:12px; color:var(--muted); margin:0 0 8px 4px}
+  .row{display:grid; grid-template-columns:repeat(2,minmax(140px,1fr)); gap:12px}
+  .row3{display:grid; grid-template-columns:repeat(3,minmax(120px,1fr)); gap:12px}
+  .row4{display:grid; grid-template-columns:repeat(4,minmax(120px,1fr)); gap:12px}
+  @media (max-width:660px){ .row,.row3,.row4{grid-template-columns:1fr} }
+
+  input{
+    width:100%; padding:12px 12px; border-radius:12px; border:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) , #0e1430;
+    color:var(--txt); font-size:16px; outline:none; transition: .2s border, .2s box-shadow, .2s transform;
+  }
+  input:focus{border-color:#3c65ff; box-shadow:0 0 0 4px rgba(60,101,255,.15)}
+  input::placeholder{color:#6d769b}
+
+  .btns{display:flex; gap:10px; flex-wrap:wrap}
+  .btn{
+    position:relative; isolation:isolate;
+    border:1px solid #2a3567; background:linear-gradient(180deg,#1a2352,#121a45);
+    color:#eaf0ff; padding:12px 14px; border-radius:12px; font-weight:700; cursor:pointer;
+    transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+    box-shadow: 0 8px 18px rgba(17,24,39,.35);
+  }
+  .btn:hover{transform: translateY(-1px); border-color:#3c65ff}
+  .btn:active{transform: translateY(0)}
+  .btn.alt{background:linear-gradient(180deg,#0f173d,#0b1234)}
+  .btn.ghost{background:transparent; border-color:#2a3567}
+  .btn .glow{
+    content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1;
+    background: conic-gradient(from 0deg, rgba(106,165,255,.35), rgba(126,247,212,.35), rgba(179,136,255,.35), rgba(106,165,255,.35));
+    filter: blur(18px); opacity:0; transition:.25s opacity;
+  }
+  .btn:hover .glow{opacity:.8}
+
+  .hint{font-size:12px; color:var(--muted); margin-top:8px}
+  .sep{height:1px; background:linear-gradient(90deg, transparent, #283261, transparent); margin:14px 0}
+
+  /* Resultados */
+  .outs{display:grid; grid-template-columns:1fr; gap:12px}
+  .pill{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) , var(--card-2);
+    border:1px solid var(--line); padding:14px; border-radius:14px; font-variant-numeric:tabular-nums;
+  }
+  .tag{font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted)}
+  .ok{color:#0dd68c; border-color:#1f6a54; background:linear-gradient(180deg, rgba(13,214,140,.12), rgba(13,214,140,0))}
+  .bad{color:#ff6b73; border-color:#6a1f28; background:linear-gradient(180deg, rgba(255,107,115,.12), rgba(255,107,115,0))}
+  .mid{color:#ffc458; border-color:#6a4e1f; background:linear-gradient(180deg, rgba(255,196,88,.12), rgba(255,196,88,0))}
+
+  /* Gauge circular */
+  .gauge{display:flex; align-items:center; gap:16px}
+  .ring{width:120px; height:120px}
+  .ring circle{fill:none; stroke-width:12; stroke-linecap:round; transform:rotate(-90deg); transform-origin:50% 50%}
+  .ring .bg{stroke:#1e2647}
+  .ring .fg{stroke:url(#grad1); stroke-dasharray: 339.292; stroke-dashoffset: 339.292; transition:stroke-dashoffset .6s ease}
+  .ginfo{display:flex; flex-direction:column; gap:6px}
+  .gmain{font-size:28px; font-weight:800; letter-spacing:.3px}
+  .gsub{font-size:12px; color:var(--muted)}
+  .status{font-size:13px; color:var(--muted)}
+
+  /* Tooltip simples */
+  .tip{position:relative; cursor:help}
+  .tip:hover::after{
+    content:attr(data-tip); position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 8px);
+    background:#0b1234; color:#d9e1ff; border:1px solid #2a3567; border-radius:10px; padding:8px 10px; font-size:12px; white-space:nowrap; box-shadow:var(--shadow);
+  }
+
+  /* Tabela resumo */
+  table{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums}
+  th,td{padding:10px 12px; border-bottom:1px dashed #263065}
+  th{text-align:left; color:#9fb0ea; font-weight:700}
+  tr:hover td{background:linear-gradient(90deg, rgba(60,101,255,.08), transparent)}
+
+  /* Animação de entrada */
+  .reveal{opacity:0; transform:translateY(10px); transition: .5s opacity ease, .5s transform ease}
+  .reveal.on{opacity:1; transform:none}
+</style>
+</head>
+<body>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+
+  <header>
+    <h1 class="title">Calculadora de P2 e Média Anual</h1>
+    <p class="sub">Fórmulas: <span class="tip" data-tip="Média do 3º trimestre">T3=(P1+P2+2·S)/2</span> • <span class="tip" data-tip="Média Anual final">MA=(2·T1+2·T2+3·T3)/7</span>. Intervalo de notas: 0–10.</p>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <!-- Painel de entrada -->
+      <section class="card reveal" id="panel-in">
+        <div class="hd">
+          <h2>Entradas</h2>
+        </div>
+        <div class="bd">
+          <div class="row4">
+            <div>
+              <label for="t1">T1 • Média 1º tri</label>
+              <input id="t1" inputmode="decimal" placeholder="ex.: 6,5" autocomplete="off">
+            </div>
+            <div>
+              <label for="t2">T2 • Média 2º tri</label>
+              <input id="t2" inputmode="decimal" placeholder="ex.: 7,8" autocomplete="off">
+            </div>
+            <div>
+              <label for="p1">P1 • Nota do 3º tri</label>
+              <input id="p1" inputmode="decimal" placeholder="ex.: 5,5" autocomplete="off">
+            </div>
+            <div>
+              <label for="s">S • Simulado do 3º tri</label>
+              <input id="s" inputmode="decimal" placeholder="ex.: 0,7" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div>
+              <label for="p2">P2 • Nota do 3º tri (opcional)</label>
+              <input id="p2" inputmode="decimal" placeholder="preencha se já fez a P2" autocomplete="off">
+            </div>
+            <div>
+              <label for="goal">MA desejada</label>
+              <input id="goal" inputmode="decimal" value="7,00">
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="btns">
+            <button class="btn" id="calcP2"><span class="glow"></span>Calcular P2 mínima</button>
+            <button class="btn alt" id="calcMA"><span class="glow"></span>Calcular MA com P2</button>
+            <button class="btn ghost" id="limpar">Limpar</button>
+            <button class="btn ghost" id="exemplo">Exemplo</button>
+          </div>
+          <div class="hint">Dica: use vírgula ou ponto. Ex.: 7,3 = 7.3</div>
+        </div>
+      </section>
+
+      <!-- Painel de resultados -->
+      <section class="card reveal" id="panel-out">
+        <div class="hd">
+          <h2>Resultados</h2>
+        </div>
+        <div class="bd outs">
+          <div class="gauge">
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#6aa5ff"/>
+                  <stop offset="50%" stop-color="#7ef7d4"/>
+                  <stop offset="100%" stop-color="#b388ff"/>
+                </linearGradient>
+              </defs>
+              <circle class="bg" cx="60" cy="60" r="54"></circle>
+              <circle class="fg" id="fg" cx="60" cy="60" r="54" stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+            </svg>
+            <div class="ginfo">
+              <div class="gmain" id="maVal">MA —</div>
+              <div class="gsub" id="gsub">Meta: 7,00 • T3: —</div>
+              <div class="status" id="status">Status: —</div>
+            </div>
+          </div>
+
+          <div class="pill" id="p2pill">
+            <div>P2 mínima</div>
+            <div class="tag" id="p2tag">—</div>
+          </div>
+          <div class="pill" id="t3pill">
+            <div>T3 (3º trimestre)</div>
+            <div class="tag" id="t3tag">—</div>
+          </div>
+          <div class="pill" id="explain">
+            <div>Fórmulas</div>
+            <div class="tag">T3=(P1+P2+2·S)/2 • MA=(2·T1+2·T2+3·T3)/7</div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="card" style="background:#0e1430; border-radius:12px; border:1px solid #2a3567">
+            <div class="bd" style="padding:12px">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Parâmetro</th><th>Valor</th><th>Observação</th>
+                  </tr>
+                </thead>
+                <tbody id="tbl">
+                  <!-- preenchido via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+/* ===== Utilidades ===== */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+const fmt = n => Number.isFinite(n) ? n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
+const parseNum = v => {
+  if (typeof v !== 'string') return NaN;
+  const t = v.trim().replace(/\s+/g,'').replace(',','.');
+  const n = Number(t);
+  return Number.isFinite(n) ? n : NaN;
+};
+function clamp01(x){ return Math.max(0, Math.min(10, x)); }
+
+/* Cálculos */
+function calcT3(p1, p2, s){ return (p1 + p2 + 2*s) / 2; }
+function calcMA(t1, t2, t3){ return (2*t1 + 2*t2 + 3*t3) / 7; }
+function calcP2Min(t1,t2,p1,s,goal){
+  const t3Need = (7*goal - 2*t1 - 2*t2)/3;   // T3 necessário
+  return 2*t3Need - p1 - 2*s;                // isola P2
+}
+
+/* UI helpers */
+function setTag(id, val, kind){
+  const el = $(id);
+  el.textContent = val;
+  el.className = 'tag' + (kind ? ' ' + kind : '');
+}
+function setStatus(txt, kind){
+  const el = $('#status');
+  el.textContent = 'Status: ' + txt;
+  el.style.color = kind==='ok' ? '#27c175' : (kind==='bad' ? '#ff5a5f' : '#ffb020');
+}
+function animateGauge(ratio){
+  // ratio: 0..1
+  const C = 339.292;
+  const off = C * (1 - Math.max(0, Math.min(1, ratio)));
+  const fg = $('#fg');
+  fg.style.strokeDashoffset = off.toFixed(2);
+}
+
+/* Tabela dinâmica */
+function setTable(rows){
+  const tb = $('#tbl');
+  tb.innerHTML = rows.map(([k,v,obs]) => `
+    <tr><td>${k}</td><td>${v}</td><td>${obs||''}</td></tr>
+  `).join('');
+}
+
+/* Leitura segura dos inputs */
+function readInputs(){
+  const t1 = parseNum($('#t1').value);
+  const t2 = parseNum($('#t2').value);
+  const p1 = parseNum($('#p1').value);
+  const s  = parseNum($('#s').value);
+  const p2 = parseNum($('#p2').value);
+  const goal = parseNum($('#goal').value);
+  return {t1,t2,p1,s,p2,goal};
+}
+
+/* Exibir MA e T3 */
+function showMA_T3(ma, t3, goal){
+  $('#maVal').textContent = 'MA ' + fmt(ma);
+  $('#gsub').textContent = `Meta: ${fmt(goal)} • T3: ${fmt(t3)}`;
+  const ratio = Math.max(0, Math.min(1, ma/goal));
+  animateGauge(ratio);
+}
+
+/* ===== Ações ===== */
+$('#calcP2').addEventListener('click', ()=>{
+  const {t1,t2,p1,s,goal} = readInputs();
+  // validações básicas
+  if([t1,t2,p1,s,goal].some(Number.isNaN)){ setStatus('preencha T1, T2, P1, S e Meta.', 'warn'); return; }
+
+  const p2minRaw = calcP2Min(t1,t2,p1,s,goal);
+  const t3Need   = (7*goal - 2*t1 - 2*t2)/3;
+
+  const p2min = p2minRaw; // não clamp para mostrar se é impossível
+  setTag('#p2tag', p2minRaw>10 ? `${fmt(p2min)} (impossível >10)` : fmt(p2min), p2minRaw>10 ? 'bad' : (p2minRaw<=0 ? 'ok' : 'mid'));
+  setTag('#t3tag', fmt(t3Need), 'mid');
+
+  // Mostrar MA correspondente ao T3 alvo (será exatamente a meta)
+  showMA_T3(goal, t3Need, goal);
+  setStatus(p2minRaw>10 ? 'alvo inalcançável com P2 ≤ 10' : (p2minRaw<=0 ? 'já aprovado' : 'faça ao menos a P2 mínima'), p2minRaw>10 ? 'bad' : (p2minRaw<=0 ? 'ok' : 'mid'));
+
+  setTable([
+    ['T1', fmt(t1), '1º trimestre'],
+    ['T2', fmt(t2), '2º trimestre'],
+    ['P1', fmt(p1), '3º tri'],
+    ['S (Simulado)', fmt(s), '3º tri'],
+    ['Meta (MA)', fmt(goal), 'objetivo'],
+    ['T3 necessário', fmt(t3Need), 'alcança a meta'],
+    ['P2 mínima', fmt(p2min), p2minRaw>10?'>10 impossível':(p2minRaw<=0?'já aprovado':'precisa alcançar')]
+  ]);
+  saveLocal();
+});
+
+$('#calcMA').addEventListener('click', ()=>{
+  const {t1,t2,p1,s,p2,goal} = readInputs();
+  if([t1,t2,p1,s,p2,goal].some(Number.isNaN)){ setStatus('preencha T1, T2, P1, S, P2 e Meta.', 'warn'); return; }
+
+  const t3 = calcT3(p1, p2, s);
+  const ma = calcMA(t1, t2, t3);
+
+  setTag('#t3tag', fmt(t3), '');
+  setTag('#p2tag', fmt(p2), '');
+  showMA_T3(ma, t3, goal);
+  setStatus(ma>=goal ? 'aprovado na meta' : 'não atingiu a meta', ma>=goal ? 'ok' : 'bad');
+
+  setTable([
+    ['T1', fmt(t1), '1º trimestre'],
+    ['T2', fmt(t2), '2º trimestre'],
+    ['P1', fmt(p1), '3º tri'],
+    ['P2', fmt(p2), '3º tri'],
+    ['S (Simulado)', fmt(s), '3º tri'],
+    ['T3', fmt(t3), 'média do 3º tri'],
+    ['MA', fmt(ma), ma>=goal?'alcançou a meta':'abaixo da meta']
+  ]);
+  saveLocal();
+});
+
+$('#limpar').addEventListener('click', ()=>{
+  ['t1','t2','p1','s','p2'].forEach(id => { $(('#'+id)).value=''; });
+  $('#goal').value='7,00';
+  setTag('#p2tag','—'); setTag('#t3tag','—');
+  $('#maVal').textContent='MA —'; $('#gsub').textContent='Meta: 7,00 • T3: —';
+  $('#status').textContent='Status: —'; animateGauge(0);
+  setTable([]);
+  localStorage.removeItem('calc-notas');
+});
+
+$('#exemplo').addEventListener('click', ()=>{
+  $('#t1').value='6,50';
+  $('#t2').value='7,80';
+  $('#p1').value='5,50';
+  $('#s').value='0,70';
+  $('#goal').value='7,00';
+  $('#p2').value='';
+});
+
+/* Persistência local */
+function saveLocal(){
+  const data = {
+    t1:$('#t1').value, t2:$('#t2').value, p1:$('#p1').value, s:$('#s').value, p2:$('#p2').value, goal:$('#goal').value
+  };
+  localStorage.setItem('calc-notas', JSON.stringify(data));
+}
+(function loadLocal(){
+  const raw = localStorage.getItem('calc-notas');
+  if(!raw) return;
+  try{
+    const d = JSON.parse(raw);
+    Object.entries(d).forEach(([k,v])=>{
+      const el = $('#'+k); if(el) el.value = v;
+    });
+  }catch(e){}
+})();
+
+/* Revelar com scroll */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('on');
+  });
+},{threshold:.1});
+$$('.reveal').forEach(el=>io.observe(el));
+
+/* Acessibilidade básica de tecla Enter no form */
+['t1','t2','p1','s','p2','goal'].forEach(id=>{
+  $('#'+id).addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); $('#calcP2').click(); }
+  });
+});
+</script>
+</body>
+</html>
