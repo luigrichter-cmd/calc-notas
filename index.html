@@ -4,166 +4,184 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Calculadora de Notas — Fundamental e Médio</title>
-<meta name="description" content="Calculadora com abas para Ensino Fundamental e Ensino Médio. Média Trimestral/Tx e Média Anual, além de P2 mínima (Médio) e Tri mínimo (Fundamental).">
+<meta name="description" content="Calculadora elegante com abas: Ensino Fundamental e Ensino Médio. Média Trimestral/Tx e Média Anual, além de P2 mínima (Médio) e Tri mínimo (Fundamental).">
 <style>
 :root{
-  --bg:#0b0f23; --bg2:#0a0d1d;
-  --card:#111735; --card2:#0f1430;
-  --line:#1c2450;
-  --txt:#e8edf9; --muted:#a7b0d1;
+  --bg:#070a17; --bg2:#090d1f;
+  --card:#0e1430; --glass:rgba(255,255,255,.04);
+  --line:#212a56; --line2:#2b356b;
+  --txt:#edf2ff; --muted:#9fb0ea; --muted2:#7b8ac3;
   --brand1:#6aa5ff; --brand2:#7ef7d4; --brand3:#b388ff;
-  --ok:#21c58f; --warn:#ffb020; --bad:#ff5a5f;
-  --shadow:0 14px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
-  --radius:16px;
+  --ok:#19d49b; --warn:#ffb020; --bad:#ff6a6f;
+  --shadow:0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.03);
+  --radius:18px;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0; color:var(--txt);
-  font:16px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   background:
-    radial-gradient(1400px 900px at -10% -10%, #1a2150 0%, rgba(26,33,80,0) 60%),
-    radial-gradient(1100px 800px at 110% 0%, #162a60 0%, rgba(22,42,96,0) 60%),
+    radial-gradient(1300px 800px at -10% -10%, #1a2150 0%, rgba(26,33,80,0) 55%),
+    radial-gradient(1100px 700px at 110% 0%, #14255a 0%, rgba(20,37,90,0) 55%),
     linear-gradient(180deg, var(--bg), var(--bg2));
   overflow-x:hidden;
 }
 
-/* orbes animadas */
-.orb{position:fixed; border-radius:50%; filter:blur(40px); opacity:.35; mix-blend-mode:screen; z-index:-1}
-.o1{width:520px;height:520px; background:radial-gradient(circle at 30% 30%, #6aa5ff, transparent 60%); top:-140px; left:-120px; animation:float 16s ease-in-out infinite}
-.o2{width:600px;height:600px; background:radial-gradient(circle at 70% 40%, #7ef7d4, transparent 55%); bottom:-160px; right:-140px; animation:float2 18s ease-in-out infinite}
-.o3{width:420px;height:420px; background:radial-gradient(circle at 50% 50%, #b388ff, transparent 60%); top:38%; left:58%; animation:float3 20s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(28px,18px)}}
-@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-36px,-26px)}}
-@keyframes float3{0%,100%{transform:translate(0,0)}50%{transform:translate(-24px,20px)}}
+/* orbes + rede sutil */
+.orb{position:fixed; border-radius:50%; filter:blur(40px); opacity:.35; mix-blend-mode:screen; z-index:-2}
+.o1{width:560px;height:560px;background:radial-gradient(circle at 30% 30%,#6aa5ff,transparent 60%);top:-160px;left:-140px;animation:f1 16s ease-in-out infinite}
+.o2{width:620px;height:620px;background:radial-gradient(circle at 70% 40%,#7ef7d4,transparent 55%);bottom:-180px;right:-160px;animation:f2 19s ease-in-out infinite}
+.o3{width:420px;height:420px;background:radial-gradient(circle at 50% 50%,#b388ff,transparent 60%);top:38%;left:58%;animation:f3 21s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,20px)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-36px,-26px)}}
+@keyframes f3{0%,100%{transform:translate(0,0)}50%{transform:translate(-26px,22px)}}
+.grid-bg{
+  position:fixed; inset:0; background:
+  linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px) 0 0/40px 40px,
+  linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px) 0 0/40px 40px;
+  mask-image: radial-gradient(1000px 600px at 50% 30%, #000 40%, transparent 80%);
+  z-index:-1; opacity:.22;
+}
 
-/* layout */
-.wrap{max-width:1200px; margin:0 auto; padding:28px 16px 44px}
-header{padding:10px 0 22px; text-align:center}
-.title{margin:0; font-size:clamp(22px,3.3vw,32px); font-weight:800; letter-spacing:.2px}
-.sub{margin:8px 0 0; color:var(--muted); font-size:14px}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 16px 48px}
+header{text-align:center;margin-bottom:18px}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:linear-gradient(180deg,var(--glass),transparent);backdrop-filter:blur(6px);color:var(--muted);font-size:12px}
+.logoDot{width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,var(--brand1),var(--brand3));box-shadow:0 0 14px rgba(106,165,255,.9)}
+.title{margin:10px 0 6px;font-weight:900;font-size:clamp(24px,3.4vw,34px);letter-spacing:.2px}
+.sub{margin:0;color:var(--muted);font-size:14px}
 
-.tabs{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px}
+.tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .tab{
-  background:#0f1430; border:1px solid var(--line); border-radius:12px;
-  padding:10px 16px; font-weight:800; cursor:pointer;
-  transition: .2s transform, .25s box-shadow, .25s background;
-  color:#cfd8ff;
+  background:linear-gradient(180deg,#0d1333,#0a102b);
+  border:1px solid var(--line);border-radius:14px;padding:10px 16px;
+  font-weight:800;color:#dfe6ff;cursor:pointer;transition:.2s transform,.25s box-shadow,.25s background;
+  box-shadow:0 10px 24px rgba(0,0,0,.35)
 }
 .tab:hover{transform:translateY(-1px)}
-.tab.active{background:linear-gradient(90deg, var(--brand1), var(--brand3)); color:#fff; box-shadow:0 0 20px rgba(106,165,255,.35)}
+.tab.active{background:linear-gradient(90deg,var(--brand1),var(--brand3));color:#fff;box-shadow:0 0 22px rgba(106,165,255,.35)}
 
-.grid{display:grid; grid-template-columns: 1.25fr .75fr; gap:18px}
-@media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+@media (max-width: 980px){.layout{grid-template-columns:1fr}}
 
-/* cards */
-.card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)), var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
-.card .hd{padding:16px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px}
-.card .hd h2{margin:0; font-size:16px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)), var(--card);
+  border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)
+}
+.card .hd{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.card .hd h2{margin:0;font-size:16px}
 .card .bd{padding:18px}
 
+/* ação chips */
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.chip{
+  background:linear-gradient(180deg,#101743,#0d143a);
+  border:1px solid var(--line2); color:#dfe6ff; padding:10px 14px;border-radius:999px;
+  font-weight:800;cursor:pointer;transition:.12s transform,.2s border-color,.2s box-shadow
+}
+.chip:hover{transform:translateY(-1px);border-color:#3c65ff}
+.chip.active{border-color:#3c65ff;box-shadow:0 0 0 3px rgba(60,101,255,.22) inset}
+
 /* inputs */
-label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px 4px}
-.inputs{display:grid; grid-template-columns:repeat(3,minmax(180px,1fr)); gap:12px}
-@media (max-width:660px){ .inputs{grid-template-columns:1fr} }
+label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 4px}
+.inputs{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:12px;margin-top:14px}
+@media (max-width:700px){.inputs{grid-template-columns:1fr}}
+.inputWrap{
+  position:relative;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--glass),transparent);
+  transition:.2s border,.2s box-shadow
+}
+.inputWrap:focus-within{border-color:#3c65ff;box-shadow:0 0 0 4px rgba(60,101,255,.12)}
+.inputIcon{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.8}
 input{
-  width:100%; padding:12px 12px; border-radius:12px; border:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)), #0e1430;
-  color:var(--txt); font-size:16px; outline:none; transition: .2s border, .2s box-shadow, .2s transform;
+  width:100%;padding:12px 12px 12px 36px;border:0;background:transparent;color:var(--txt);font-size:16px;outline:none
 }
-input:focus{border-color:#3c65ff; box-shadow:0 0 0 4px rgba(60,101,255,.15)}
-input::placeholder{color:#6d769b}
+input::placeholder{color:#6e76a5}
+.hint{font-size:12px;color:var(--muted2);margin-top:10px}
+.sep{height:1px;background:linear-gradient(90deg,transparent,#2b356b,transparent);margin:16px 0}
 
-.hint{font-size:12px; color:var(--muted); margin-top:8px}
-.sep{height:1px; background:linear-gradient(90deg, transparent, #283261, transparent); margin:14px 0}
-
-/* buttons */
-.btns{display:flex; gap:10px; flex-wrap:wrap}
+/* botões */
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 .btn{
-  position:relative; isolation:isolate;
-  border:1px solid #2a3567; background:linear-gradient(180deg,#1a2352,#121a45);
-  color:#eaf0ff; padding:12px 14px; border-radius:12px; font-weight:800; cursor:pointer;
-  transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease; box-shadow: 0 8px 18px rgba(17,24,39,.35)
+  position:relative;isolation:isolate;
+  border:1px solid #2a3567;background:linear-gradient(180deg,#1a2352,#121a45);
+  color:#eaf0ff;padding:12px 14px;border-radius:12px;font-weight:900;cursor:pointer;
+  transition:transform .12s ease,box-shadow .2s ease,border-color .2s ease;box-shadow:0 10px 22px rgba(17,24,39,.36)
 }
-.btn:hover{transform: translateY(-1px); border-color:#3c65ff}
-.btn:active{transform: translateY(0)}
-.btn.alt{background:linear-gradient(180deg,#0f173d,#0b1234)}
-.btn.ghost{background:transparent; border-color:#2a3567}
-.btn.active{border-color:#3c65ff; box-shadow:0 0 0 3px rgba(60,101,255,.25) inset}
-.btn .glow{
-  content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1;
-  background: conic-gradient(from 0deg, rgba(106,165,255,.35), rgba(126,247,212,.35), rgba(179,136,255,.35), rgba(106,165,255,.35));
-  filter: blur(18px); opacity:0; transition:.25s opacity;
-}
+.btn:hover{transform:translateY(-1px);border-color:#3c65ff}
+.btn.ghost{background:transparent}
+.btn .glow{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;background:conic-gradient(from 0deg,rgba(106,165,255,.30),rgba(126,247,212,.30),rgba(179,136,255,.30),rgba(106,165,255,.30));filter:blur(18px);opacity:0;transition:.25s}
 .btn:hover .glow{opacity:.8}
 
 /* outputs */
-.outs{display:grid; gap:12px}
-.pill{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)), var(--card2);
-  border:1px solid var(--line); padding:14px; border-radius:14px; font-variant-numeric:tabular-nums
+.outs{display:grid;gap:12px}
+.kpi{
+  display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,var(--glass),transparent);
+  border:1px solid var(--line);border-radius:14px;padding:14px
 }
-.tag{font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted)}
-.ok{color:#0bd68b; border-color:#1b6a52; background:linear-gradient(180deg, rgba(13,214,140,.12), rgba(13,214,140,0))}
-.bad{color:#ff6b73; border-color:#6a1f28; background:linear-gradient(180deg, rgba(255,107,115,.12), rgba(255,107,115,0))}
-.mid{color:#ffc458; border-color:#6a4e1f; background:linear-gradient(180deg, rgba(255,196,88,.12), rgba(255,196,88,0))}
-
-/* gauge */
-.gauge{display:flex; align-items:center; gap:16px}
-.ring{width:140px; height:140px}
-.ring circle{fill:none; stroke-width:12; stroke-linecap:round; transform:rotate(-90deg); transform-origin:50% 50%}
+.gauge{display:flex;align-items:center;gap:16px}
+.ring{width:140px;height:140px}
+.ring circle{fill:none;stroke-width:12;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
 .ring .bg{stroke:#1e2647}
-.ring .fg{stroke:url(#grad1); stroke-dasharray: 439.822; stroke-dashoffset: 439.822; transition:stroke-dashoffset .6s ease}
-.ginfo{display:flex; flex-direction:column; gap:6px}
-.gmain{font-size:30px; font-weight:900; letter-spacing:.3px}
-.gsub{font-size:12px; color:var(--muted)}
-.status{font-size:13px; color:var(--muted)}
+.ring .fg{stroke:url(#grad1);stroke-dasharray:439.822;stroke-dashoffset:439.822;transition:stroke-dashoffset .6s ease}
+.ginfo{display:flex;flex-direction:column;gap:4px}
+.gmain{font-size:30px;font-weight:900;letter-spacing:.3px}
+.gsub{font-size:12px;color:var(--muted2)}
+.status{font-size:13px;color:var(--muted2)}
 
-/* toast */
-.toast{
-  position:fixed; right:16px; bottom:16px; background:linear-gradient(180deg,#0f173d,#0b1234);
-  color:#eaf0ff; border:1px solid #2a3567; border-radius:12px; padding:12px 14px; box-shadow:var(--shadow);
-  opacity:0; transform:translateY(8px); pointer-events:none; transition:.3s
+.pill{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:linear-gradient(180deg,var(--glass),transparent);
+  border:1px solid var(--line);padding:14px;border-radius:14px;font-variant-numeric:tabular-nums
 }
-.toast.show{opacity:1; transform:none}
+.tag{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.ok{color:var(--ok);border-color:#1b6a52;background:linear-gradient(180deg,rgba(13,214,140,.12),rgba(13,214,140,0))}
+.bad{color:var(--bad);border-color:#6a1f28;background:linear-gradient(180deg,rgba(255,107,115,.12),rgba(255,107,115,0))}
+.mid{color:var(--warn);border-color:#6a4e1f;background:linear-gradient(180deg,rgba(255,196,88,.12),rgba(255,196,88,0))}
 
-/* a11y */
-.visually-hidden{position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;}
+.tableCard{background:linear-gradient(180deg,var(--glass),transparent);border:1px solid var(--line);border-radius:12px}
+.tableCard table{width:100%;border-collapse:collapse}
+.tableCard th,.tableCard td{padding:10px 12px;border-bottom:1px dashed #2b356b;text-align:left}
+.tableCard th{color:#c9d6ff}
+.tableCard tr:last-child td{border-bottom:0}
+
+/* toasts */
+.toast{position:fixed;right:16px;bottom:16px;background:linear-gradient(180deg,#0f173d,#0b1234);color:#eaf0ff;border:1px solid #2a3567;border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);pointer-events:none;transition:.3s}
+.toast.show{opacity:1;transform:none}
+
+/* acessibilidade */
+.visually-hidden{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
 </style>
 </head>
 <body>
-<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grid-bg"></div>
 
-<header class="wrap">
-  <h1 class="title">Calculadora de Notas — Fundamental e Médio</h1>
-  <p class="sub">Abas independentes, cálculos completos e alvos específicos. Notas válidas: 0–10.</p>
-  <div class="tabs" role="tablist" aria-label="Modos">
-    <button id="tabFund" class="tab active" role="tab" aria-selected="true" aria-controls="panelFund" onclick="setTab('fund')">Ensino Fundamental</button>
-    <button id="tabMed"  class="tab" role="tab" aria-selected="false" aria-controls="panelMed"  onclick="setTab('med')">Ensino Médio</button>
-  </div>
-</header>
+<div class="wrap">
+  <header>
+    <span class="kicker"><span class="logoDot"></span> Calculadora de Notas</span>
+    <h1 class="title">Ensino Fundamental & Ensino Médio</h1>
+    <p class="sub">Cálculos precisos com visual impecável. Alterna entre modos, define metas e obtém Tx/T3, MA, P2 mínima ou Tri mínimo.</p>
+    <div class="tabs" role="tablist" aria-label="Modos">
+      <button id="tabFund" class="tab active" role="tab" aria-selected="true" aria-controls="panelFund" onclick="setTab('fund')">Ensino Fundamental</button>
+      <button id="tabMed"  class="tab" role="tab" aria-selected="false" aria-controls="panelMed"  onclick="setTab('med')">Ensino Médio</button>
+    </div>
+  </header>
 
-<main class="wrap">
-  <div class="grid">
-
+  <main class="layout">
     <!-- Entradas -->
     <section class="card" aria-labelledby="inTitle">
       <div class="hd"><h2 id="inTitle">Entradas</h2></div>
       <div class="bd">
         <!-- ações -->
-        <div class="inputs" style="grid-template-columns:repeat(3,minmax(180px,1fr))">
-          <div>
-            <label>Ação</label>
-            <div id="actions" class="btns" style="padding:6px 0"></div>
-          </div>
+        <div class="actions" id="actions"></div>
+
+        <div class="inputs" style="margin-top:10px">
           <div>
             <label for="goalMA">Meta de MA</label>
-            <input id="goalMA" inputmode="decimal" value="7,00" />
+            <div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#8aa1ff" d="M12 3l9 4.5v9L12 21 3 16.5v-9z"/></svg><input id="goalMA" inputmode="decimal" value="7,00" placeholder="7,0"></div>
           </div>
           <div>
             <label for="goalTx">Meta de Tx</label>
-            <input id="goalTx" inputmode="decimal" value="7,00" />
+            <div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#86f7d9" d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"/></svg><input id="goalTx" inputmode="decimal" value="7,00" placeholder="7,0"></div>
           </div>
         </div>
 
@@ -172,16 +190,14 @@ input::placeholder{color:#6d769b}
         <!-- campos -->
         <div id="inputsArea" class="inputs"></div>
 
-        <p class="hint">Use vírgula ou ponto. Ex.: 7,3 = 7.3</p>
+        <p class="hint">Dica: use vírgula ou ponto (ex.: 7,3 = 7.3). Notas aceitas entre 0 e 10.</p>
 
         <div class="sep"></div>
 
         <div class="btns">
           <button class="btn" id="btnCalc"><span class="glow"></span>Calcular</button>
-          <button class="btn alt" id="btnExemplo"><span class="glow"></span>Preencher exemplo</button>
-          <button class="btn ghost" id="btnLimpar">Limpar</button>
-          <button class="btn ghost" id="btnSalvar">Salvar local</button>
-          <button class="btn ghost" id="btnCarregar">Carregar</button>
+          <button class="btn ghost" id="btnLimpar"><span class="glow"></span>Limpar</button>
+          <button class="btn ghost" id="btnExemplo"><span class="glow"></span>Preencher exemplo</button>
         </div>
       </div>
     </section>
@@ -190,22 +206,24 @@ input::placeholder{color:#6d769b}
     <section class="card" aria-labelledby="outTitle">
       <div class="hd"><h2 id="outTitle">Resultados</h2></div>
       <div class="bd outs">
-        <div class="gauge">
-          <svg class="ring" viewBox="0 0 140 140" aria-hidden="true">
-            <defs>
-              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#6aa5ff"/>
-                <stop offset="50%" stop-color="#7ef7d4"/>
-                <stop offset="100%" stop-color="#b388ff"/>
-              </linearGradient>
-            </defs>
-            <circle class="bg" cx="70" cy="70" r="70"></circle>
-            <circle class="fg" id="fg" cx="70" cy="70" r="70"></circle>
-          </svg>
-          <div class="ginfo">
-            <div class="gmain" id="maVal">MA —</div>
-            <div class="gsub" id="gsub">Meta: 7,00 • T3/Tx: —</div>
-            <div class="status" id="status">Status: —</div>
+        <div class="kpi">
+          <div class="gauge">
+            <svg class="ring" viewBox="0 0 140 140" aria-hidden="true">
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#6aa5ff"/>
+                  <stop offset="50%" stop-color="#7ef7d4"/>
+                  <stop offset="100%" stop-color="#b388ff"/>
+                </linearGradient>
+              </defs>
+              <circle class="bg" cx="70" cy="70" r="70"></circle>
+              <circle class="fg" id="fg" cx="70" cy="70" r="70"></circle>
+            </svg>
+            <div class="ginfo">
+              <div class="gmain" id="maVal">MA —</div>
+              <div class="gsub" id="gsub">Meta: 7,00 • T3/Tx: —</div>
+              <div class="status" id="status">Status: —</div>
+            </div>
           </div>
         </div>
 
@@ -213,271 +231,208 @@ input::placeholder{color:#6d769b}
         <div class="pill"><div>Média do 3º trimestre (T3/Tx)</div><div class="tag" id="t3tag">—</div></div>
         <div class="pill"><div>Observação</div><div class="tag" id="obstag">—</div></div>
 
-        <div class="sep"></div>
-
-        <div class="card" style="background:#0e1430; border-radius:12px; border:1px solid #2a3567">
-          <div class="bd" style="padding:12px">
-            <table style="width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums">
-              <thead>
-                <tr>
-                  <th style="text-align:left; color:#9fb0ea; padding:10px 12px; border-bottom:1px dashed #263065">Parâmetro</th>
-                  <th style="text-align:left; color:#9fb0ea; padding:10px 12px; border-bottom:1px dashed #263065">Valor</th>
-                  <th style="text-align:left; color:#9fb0ea; padding:10px 12px; border-bottom:1px dashed #263065">Descrição</th>
-                </tr>
-              </thead>
-              <tbody id="tbl"></tbody>
-            </table>
-          </div>
+        <div class="tableCard">
+          <table>
+            <thead>
+              <tr><th>Parâmetro</th><th>Valor</th><th>Descrição</th></tr>
+            </thead>
+            <tbody id="tbl"></tbody>
+          </table>
         </div>
-
       </div>
     </section>
+  </main>
+</div>
 
-  </div>
-</main>
-
-<div id="toast" class="toast" role="status" aria-live="polite">Salvo</div>
+<div id="toast" class="toast" role="status" aria-live="polite">Ok</div>
 
 <script>
-/* ===== Utilidades ===== */
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-const fmt = n => Number.isFinite(n) ? n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
-const CIRC = 439.822;
-function setGauge(ratio){ $('#fg').style.strokeDashoffset = (CIRC*(1-Math.max(0,Math.min(1,ratio)))).toFixed(2); }
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
-function toNumRaw(v){ if(typeof v!=='string') return NaN; const t=v.trim().replace(/\s+/g,'').replace(',','.'); const n=Number(t); return Number.isFinite(n)?n:NaN; }
-function read(id){ return toNumRaw($('#'+id)?.value ?? ''); }
-function setTag(id, val, kind){ const el=$(id); el.textContent=val; el.className='tag'+(kind?' '+kind:''); }
-function setTable(rows){ $('#tbl').innerHTML = rows.map(([k,v,obs])=>`<tr><td style="padding:10px 12px;border-bottom:1px dashed #263065">${k}</td><td style="padding:10px 12px;border-bottom:1px dashed #263065">${v}</td><td style="padding:10px 12px;border-bottom:1px dashed #263065">${obs||''}</td></tr>`).join(''); }
+/* ===== Util ===== */
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const fmt=n=>Number.isFinite(n)?n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+const CIRC=439.822;
+function setGauge(ratio){$('#fg').style.strokeDashoffset=(CIRC*(1-Math.max(0,Math.min(1,ratio)))).toFixed(2)}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
+function toNum(s){if(typeof s!=='string')return NaN;const t=s.trim().replace(/\s+/g,'').replace(',','.');const n=Number(t);return Number.isFinite(n)?n:NaN}
+function read(id){return toNum($('#'+id)?.value??'')}
+function setTag(id,val,kind){const el=$(id);el.textContent=val;el.className='tag'+(kind?' '+kind:'')}
+function setTable(rows){$('#tbl').innerHTML=rows.map(([k,v,o])=>`<tr><td>${k}</td><td>${v}</td><td>${o||''}</td></tr>`).join('')}
 
 /* ===== Fórmulas ===== */
 /* Médio */
-function T3_medio(P1,P2,S){ return (P1 + P2 + 2*S)/2; }
-function MA_medio(T1,T2,T3){ return (2*T1 + 2*T2 + 3*T3)/7; }
-function P2min_medio(T1,T2,P1,S,goalMA){ const T3need=(7*goalMA - 2*T1 - 2*T2)/3; return 2*T3need - P1 - 2*S; }
-
+const T3_medio=(P1,P2,S)=>(P1+P2+2*S)/2;
+const MA_medio=(T1,T2,T3)=>(2*T1+2*T2+3*T3)/7;
+function P2min_medio(T1,T2,P1,S,goalMA){const T3need=(7*goalMA-2*T1-2*T2)/3;return 2*T3need-P1-2*S}
 /* Fundamental */
-function TX_fund(P1,P2,Tri,S){ return (P1 + P2 + Tri + 3*S)/3; }
-function MA_fund(T1,T2,Tx){ return (1*T1 + 1*T2 + 1.5*Tx)/3; }
-function TRIMIN_fund(P1,P2,S,goalTx){ return 3*goalTx - (P1 + P2 + 3*S); }
+const TX_fund=(P1,P2,Tri,S)=>(P1+P2+Tri+3*S)/3;
+const MA_fund=(T1,T2,Tx)=>(1*T1+1*T2+1.5*Tx)/3;
+const TRIMIN_fund=(P1,P2,S,goalTx)=>3*goalTx-(P1+P2+3*S);
 
-/* ===== Interface dinâmica ===== */
-let TAB = 'fund';            // 'fund' ou 'med'
-let ACTION = 'fund_full';    // ação selecionada
+/* ===== Estado ===== */
+let TAB='fund';         // 'fund' | 'med'
+let ACTION='fund_full'; // 'fund_full' | 'fund_tri_min' | 'med_full' | 'med_p2_min'
 
+/* ===== UI ===== */
 function setTab(t){
   TAB=t;
-  $('#tabFund').classList.toggle('active', t==='fund');
-  $('#tabMed').classList.toggle('active',  t==='med');
-  renderInputs();
-  renderActions();
-  clearOutputs();
-}
-
-function renderInputs(){
-  const a = $('#inputsArea');
-  if(TAB==='fund'){
-    a.innerHTML = `
-      <div><label for="t1">T1</label><input id="t1" placeholder="ex.: 7,0"></div>
-      <div><label for="t2">T2</label><input id="t2" placeholder="ex.: 7,0"></div>
-      <div><label for="p1">P1</label><input id="p1" placeholder="ex.: 6,5"></div>
-      <div><label for="p2">P2</label><input id="p2" placeholder="ex.: 7,2"></div>
-      <div><label for="tri">Tri (trabalho)</label><input id="tri" placeholder="ex.: 4,0"></div>
-      <div><label for="s">S (simulado)</label><input id="s" placeholder="ex.: 0,7"></div>
-    `;
-  }else{
-    a.innerHTML = `
-      <div><label for="t1">T1</label><input id="t1" placeholder="ex.: 6,5"></div>
-      <div><label for="t2">T2</label><input id="t2" placeholder="ex.: 7,8"></div>
-      <div><label for="p1">P1 (3º tri)</label><input id="p1" placeholder="ex.: 5,5"></div>
-      <div><label for="p2">P2 (3º tri)</label><input id="p2" placeholder="ex.: 6,8"></div>
-      <div><label for="s">S (simulado)</label><input id="s" placeholder="ex.: 0,7"></div>
-    `;
-  }
+  $('#tabFund').classList.toggle('active',t==='fund');
+  $('#tabMed').classList.toggle('active',t==='med');
+  renderActions(); renderInputs(); clearOutputs();
 }
 
 function renderActions(){
-  const box = $('#actions');
-  if(TAB === 'fund'){
-    ACTION = ACTION.startsWith('fund_') ? ACTION : 'fund_full';
-    box.innerHTML = `
-      <button type="button" class="btn ghost" data-act="fund_full"><span class="glow"></span>Média Anual (Tx + MA)</button>
-      <button type="button" class="btn ghost" data-act="fund_tri_min"><span class="glow"></span>Tri mínimo (Tx alvo)</button>
-    `;
-    $('#goalTx').parentElement.style.display = '';
-    $('#goalMA').parentElement.style.display = '';
+  const box=$('#actions');
+  if(TAB==='fund'){
+    ACTION=ACTION.startsWith('fund_')?ACTION:'fund_full';
+    box.innerHTML=`
+      <button type="button" class="chip" data-act="fund_full">Média Anual (Tx + MA)</button>
+      <button type="button" class="chip" data-act="fund_tri_min">Tri mínimo (Tx alvo)</button>`;
+    $('#goalTx').parentElement.parentElement.style.display='';
+    $('#goalMA').parentElement.parentElement.style.display='';
   }else{
-    ACTION = ACTION.startsWith('med_') ? ACTION : 'med_full';
-    box.innerHTML = `
-      <button type="button" class="btn ghost" data-act="med_full"><span class="glow"></span>Média Anual (T3 + MA)</button>
-      <button type="button" class="btn ghost" data-act="med_p2_min"><span class="glow"></span>P2 mínima (MA alvo)</button>
-    `;
-    $('#goalTx').parentElement.style.display = 'none';
-    $('#goalMA').parentElement.style.display = '';
+    ACTION=ACTION.startsWith('med_')?ACTION:'med_full';
+    box.innerHTML=`
+      <button type="button" class="chip" data-act="med_full">Média Anual (T3 + MA)</button>
+      <button type="button" class="chip" data-act="med_p2_min">P2 mínima (MA alvo)</button>`;
+    $('#goalTx').parentElement.parentElement.style.display='none';
+    $('#goalMA').parentElement.parentElement.style.display='';
   }
-  // selecionar e destacar
-  [...box.querySelectorAll('button')].forEach(btn=>{
-    btn.classList.toggle('active', btn.dataset.act === ACTION);
-    btn.addEventListener('click', ()=>{
-      ACTION = btn.dataset.act;
-      [...box.querySelectorAll('button')].forEach(b=>b.classList.remove('active'));
+  [...box.querySelectorAll('.chip')].forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.act===ACTION);
+    btn.addEventListener('click',()=>{
+      ACTION=btn.dataset.act;
+      [...box.querySelectorAll('.chip')].forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       clearOutputs();
     });
   });
 }
 
+function renderInputs(){
+  const a=$('#inputsArea');
+  if(TAB==='fund'){
+    a.innerHTML=`
+      <div><label for="t1">T1</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#8aa1ff" d="M5 3h14v2H5zm0 8h14v2H5zm0 8h14v2H5z"/></svg><input id="t1" placeholder="ex.: 7,0"></div></div>
+      <div><label for="t2">T2</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#8aa1ff" d="M5 3h14v2H5zm0 8h14v2H5zm0 8h14v2H5z"/></svg><input id="t2" placeholder="ex.: 7,0"></div></div>
+      <div><label for="p1">P1</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#86f7d9" d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/></svg><input id="p1" placeholder="ex.: 6,5"></div></div>
+      <div><label for="p2">P2</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#86f7d9" d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/></svg><input id="p2" placeholder="ex.: 7,2"></div></div>
+      <div><label for="tri">Tri (trabalho)</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#b388ff" d="M12 3l9 4.5v9L12 21 3 16.5v-9z"/></svg><input id="tri" placeholder="ex.: 4,0"></div></div>
+      <div><label for="s">S (simulado)</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#ffd479" d="M12 2l3 6 6 .5-4.5 4 1.3 6-5.8-3.2L6.2 18 7.5 12 3 8.5 9 8z"/></svg><input id="s" placeholder="ex.: 0,7"></div></div>`;
+  }else{
+    a.innerHTML=`
+      <div><label for="t1">T1</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#8aa1ff" d="M5 3h14v2H5zm0 8h14v2H5zm0 8h14v2H5z"/></svg><input id="t1" placeholder="ex.: 6,5"></div></div>
+      <div><label for="t2">T2</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#8aa1ff" d="M5 3h14v2H5zm0 8h14v2H5zm0 8h14v2H5z"/></svg><input id="t2" placeholder="ex.: 7,8"></div></div>
+      <div><label for="p1">P1 (3º tri)</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#86f7d9" d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/></svg><input id="p1" placeholder="ex.: 5,5"></div></div>
+      <div><label for="p2">P2 (3º tri)</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#86f7d9" d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/></svg><input id="p2" placeholder="ex.: 6,8"></div></div>
+      <div><label for="s">S (simulado)</label><div class="inputWrap"><svg class="inputIcon" width="18" height="18" viewBox="0 0 24 24"><path fill="#ffd479" d="M12 2l3 6 6 .5-4.5 4 1.3 6-5.8-3.2L6.2 18 7.5 12 3 8.5 9 8z"/></svg><input id="s" placeholder="ex.: 0,7"></div></div>`;
+  }
+}
+
+/* ===== Lógica de cálculo ===== */
 function clearOutputs(){
   $('#maVal').textContent='MA —';
   $('#gsub').textContent='Meta: 7,00 • T3/Tx: —';
   $('#status').textContent='Status: —';
   setTag('#mainTag','—'); setTag('#t3tag','—'); setTag('#obstag','—');
-  setGauge(0);
-  setTable([]);
+  setGauge(0); setTable([]);
 }
 
-/* ===== Cálculo ===== */
 $('#btnCalc').addEventListener('click', ()=>{
   const T1=read('t1'), T2=read('t2'), P1=read('p1'), P2=read('p2'), S=read('s'), TRI=read('tri');
-  const goalMA = toNumRaw($('#goalMA').value);
-  const goalTx = toNumRaw($('#goalTx').value);
+  const goalMA=toNum($('#goalMA').value), goalTx=toNum($('#goalTx').value);
 
-  function okRange(v){ return Number.isFinite(v) && v>=0 && v<=10; }
-  function need(vals){ if(vals.some(v=>!Number.isFinite(v))){ toast('Preencha todos os campos necessários'); return false;}
-                        if(vals.some(v=>v<0 || v>10)){ toast('Notas devem estar entre 0 e 10'); return false;} return true; }
+  function need(vals){
+    if(vals.some(v=>!Number.isFinite(v))){toast('Preencha todos os campos necessários');return false}
+    if(vals.some(v=>v<0||v>10)){toast('Notas devem estar entre 0 e 10');return false}
+    return true;
+  }
 
   if(ACTION==='med_full'){
-    if(!need([T1,T2,P1,P2,S])) return;
-    const T3 = T3_medio(P1,P2,S);
-    const MA = MA_medio(T1,T2,T3);
-    showResults('Médio', MA, T3, goalMA, `MA calculada com T3`, [
-      ['T1', fmt(T1), '1º trimestre'],
-      ['T2', fmt(T2), '2º trimestre'],
-      ['P1', fmt(P1), '3º tri'],
-      ['P2', fmt(P2), '3º tri'],
-      ['S',  fmt(S),  'Simulado'],
-      ['T3', fmt(T3), '=(P1+P2+2S)/2'],
-      ['MA', fmt(MA), '=(2T1+2T2+3T3)/7']
+    if(!need([T1,T2,P1,P2,S]))return;
+    const T3=T3_medio(P1,P2,S), MA=MA_medio(T1,T2,T3);
+    showResults('Médio',MA,T3,goalMA,'MA calculada com T3',[
+      ['T1',fmt(T1),'1º trimestre'],
+      ['T2',fmt(T2),'2º trimestre'],
+      ['P1',fmt(P1),'3º tri'],
+      ['P2',fmt(P2),'3º tri'],
+      ['S', fmt(S),'Simulado'],
+      ['T3',fmt(T3),'=(P1+P2+2S)/2'],
+      ['MA',fmt(MA),'=(2T1+2T2+3T3)/7']
     ]);
   }
   else if(ACTION==='med_p2_min'){
-    if(!need([T1,T2,P1,S,goalMA])) return;
-    const p2min = P2min_medio(T1,T2,P1,S,goalMA);
-    const T3need = (7*goalMA - 2*T1 - 2*T2)/3;
-    showResults('Médio', goalMA, T3need, goalMA, `P2 necessária para MA alvo`, [
-      ['T1', fmt(T1), '1º trimestre'],
-      ['T2', fmt(T2), '2º trimestre'],
-      ['P1', fmt(P1), '3º tri'],
-      ['S',  fmt(S),  'Simulado'],
-      ['MA alvo', fmt(goalMA), 'meta'],
-      ['T3 necessário', fmt(T3need), 'para a meta'],
-      ['P2 mínima', fmt(p2min), p2min>10?'>10 impossível':(p2min<=0?'já aprovado':'precisa alcançar')]
-    ], (p2min>10?'bad':(p2min<=0?'ok':'mid')), p2min>10?`P2 mínima ${fmt(p2min)} (impossível > 10)`:(p2min<=0?`P2 mínima 0,00 (já aprovado)`: `P2 mínima ${fmt(p2min)}`) );
+    if(!need([T1,T2,P1,S,goalMA]))return;
+    const p2min=P2min_medio(T1,T2,P1,S,goalMA);
+    const T3need=(7*goalMA-2*T1-2*T2)/3;
+    showResults('Médio',goalMA,T3need,goalMA,'P2 necessária para MA alvo',[
+      ['T1',fmt(T1),'1º trimestre'],
+      ['T2',fmt(T2),'2º trimestre'],
+      ['P1',fmt(P1),'3º tri'],
+      ['S', fmt(S),'Simulado'],
+      ['MA alvo',fmt(goalMA),'meta'],
+      ['T3 necessário',fmt(T3need),'para a meta'],
+      ['P2 mínima',fmt(p2min),p2min>10?'>10 impossível':(p2min<=0?'já aprovado':'precisa alcançar')]
+    ],(p2min>10?'bad':(p2min<=0?'ok':'mid')),
+      p2min>10?`P2 mínima ${fmt(p2min)} (impossível > 10)`:(p2min<=0?`P2 mínima 0,00 (já aprovado)`: `P2 mínima ${fmt(p2min)}`));
   }
   else if(ACTION==='fund_full'){
-    if(!need([T1,T2,P1,P2,TRI,S])) return;
-    const TX = TX_fund(P1,P2,TRI,S);
-    const MA = MA_fund(T1,T2,TX);
-    showResults('Fundamental', MA, TX, goalMA, `MA calculada a partir de Tx`, [
-      ['T1', fmt(T1), '1º trimestre'],
-      ['T2', fmt(T2), '2º trimestre'],
-      ['P1', fmt(P1), '3º tri'],
-      ['P2', fmt(P2), '3º tri'],
-      ['Tri', fmt(TRI), 'Trabalho (3º tri)'],
-      ['S',  fmt(S),  'Simulado (3º tri)'],
-      ['Tx', fmt(TX), '=(P1+P2+Tri+3S)/3'],
-      ['MA', fmt(MA), '=(1T1+1T2+1.5Tx)/3']
+    if(!need([T1,T2,P1,P2,TRI,S]))return;
+    const TX=TX_fund(P1,P2,TRI,S), MA=MA_fund(T1,T2,TX);
+    showResults('Fundamental',MA,TX,goalMA,'MA calculada a partir de Tx',[
+      ['T1',fmt(T1),'1º trimestre'],
+      ['T2',fmt(T2),'2º trimestre'],
+      ['P1',fmt(P1),'3º tri'],
+      ['P2',fmt(P2),'3º tri'],
+      ['Tri',fmt(TRI),'Trabalho'],
+      ['S', fmt(S),'Simulado'],
+      ['Tx',fmt(TX),'=(P1+P2+Tri+3S)/3'],
+      ['MA',fmt(MA),'=(1T1+1T2+1.5Tx)/3']
     ]);
   }
   else if(ACTION==='fund_tri_min'){
-    if(!need([P1,P2,S,goalTx])) return;
-    const triMin = TRIMIN_fund(P1,P2,S,goalTx);
-    const txTarget = goalTx;
-    showResults('Fundamental', NaN, txTarget, goalTx, `Tri mínimo para Tx alvo`, [
-      ['P1', fmt(P1), '3º tri'],
-      ['P2', fmt(P2), '3º tri'],
-      ['S',  fmt(S),  'Simulado'],
-      ['Tx alvo', fmt(goalTx), 'meta'],
-      ['Tri mínimo', fmt(triMin), triMin>10?'>10 impossível':(triMin<=0?'sem Tri, já atinge':'precisa alcançar')]
-    ], (triMin>10?'bad':(triMin<=0?'ok':'mid')), triMin>10?`Tri mínimo ${fmt(triMin)} (impossível > 10)`:(triMin<=0?`Tri mínimo 0,00 (já atinge Tx)`: `Tri mínimo ${fmt(triMin)}`) );
+    if(!need([P1,P2,S,goalTx]))return;
+    const triMin=TRIMIN_fund(P1,P2,S,goalTx);
+    showResults('Fundamental',NaN,goalTx,goalTx,'Tri mínimo para Tx alvo',[
+      ['P1',fmt(P1),'3º tri'],
+      ['P2',fmt(P2),'3º tri'],
+      ['S', fmt(S),'Simulado'],
+      ['Tx alvo',fmt(goalTx),'meta'],
+      ['Tri mínimo',fmt(triMin),triMin>10?'>10 impossível':(triMin<=0?'sem Tri, já atinge':'precisa alcançar')]
+    ],(triMin>10?'bad':(triMin<=0?'ok':'mid')),
+      triMin>10?`Tri mínimo ${fmt(triMin)} (impossível > 10)`:(triMin<=0?`Tri mínimo 0,00 (já atinge Tx)`: `Tri mínimo ${fmt(triMin)}`));
   }
 });
 
-/* exibir resultados */
-function showResults(modo, MA, T3orTx, goal, obs, tableRows, tagKind, mainOverride){
-  const goalUse = Number.isFinite(goal)?goal:7;
-  const maText = Number.isFinite(MA)?fmt(MA):'—';
-  $('#maVal').textContent = `MA ${maText}`;
-  $('#gsub').textContent  = `Meta: ${fmt(goalUse)} • ${modo==='Médio'?'T3':'Tx'}: ${fmt(T3orTx)}`;
-
-  if(Number.isFinite(MA)) setGauge(Math.min(1, Math.max(0, MA/goalUse)));
-  else setGauge(0);
-
-  const approved = Number.isFinite(MA) ? (MA>=goalUse) : null;
-  $('#status').textContent = Number.isFinite(MA) ? (approved?'Status: aprovado':'Status: abaixo da meta') : 'Status: —';
-
-  setTag('#t3tag', fmt(T3orTx), '');
-  setTag('#obstag', obs, '');
-  const defaultMain = Number.isFinite(MA) ? (approved?`MA ${fmt(MA)} ✔`:`MA ${fmt(MA)} ✖`) : '—';
-  setTag('#mainTag', mainOverride || defaultMain, tagKind || (approved?'ok':'bad'));
-
-  setTable(tableRows);
+function showResults(modo,MA,T3orTx,goal,obs,rows,tagKind,mainOverride){
+  const g=Number.isFinite(goal)?goal:7;
+  const maTxt=Number.isFinite(MA)?fmt(MA):'—';
+  $('#maVal').textContent=`MA ${maTxt}`;
+  $('#gsub').textContent=`Meta: ${fmt(g)} • ${modo==='Médio'?'T3':'Tx'}: ${fmt(T3orTx)}`;
+  setGauge(Number.isFinite(MA)?Math.min(1,Math.max(0,MA/g)):0);
+  const ok=Number.isFinite(MA)?(MA>=g):null;
+  $('#status').textContent=Number.isFinite(MA)?(ok?'Status: aprovado':'Status: abaixo da meta'):'Status: —';
+  setTag('#t3tag',fmt(T3orTx),''); setTag('#obstag',obs,'');
+  const defMain=Number.isFinite(MA)?(ok?`MA ${fmt(MA)} ✔`:`MA ${fmt(MA)} ✖`):'—';
+  setTag('#mainTag',mainOverride||defMain,tagKind||(ok?'ok':'bad'));
+  setTable(rows);
 }
 
-/* exemplo, limpar, salvar, carregar */
-$('#btnExemplo').addEventListener('click', ()=>{
+/* limpar e exemplo */
+$('#btnLimpar').addEventListener('click',()=>{$$('#inputsArea input').forEach(i=>i.value='');$('#goalMA').value='7,00';$('#goalTx').value='7,00';clearOutputs();toast('Campos limpos')});
+$('#btnExemplo').addEventListener('click',()=>{
   if(TAB==='med'){
-    $('#t1').value='6,50'; $('#t2').value='7,80'; $('#p1').value='5,50'; $('#p2').value='6,80'; $('#s').value='0,70';
-    $('#goalMA').value='7,00';
-    ACTION='med_full'; renderActions();
+    $('#t1').value='6,50';$('#t2').value='7,80';$('#p1').value='5,50';$('#p2').value='6,80';$('#s').value='0,70';$('#goalMA').value='7,00';ACTION='med_full';renderActions();
   }else{
-    $('#t1').value='7,00'; $('#t2').value='8,00'; $('#p1').value='6,50'; $('#p2').value='7,20'; $('#tri').value='4,00'; $('#s').value='0,70';
-    $('#goalMA').value='7,00'; $('#goalTx').value='7,00';
-    ACTION='fund_full'; renderActions();
+    $('#t1').value='7,00';$('#t2').value='8,00';$('#p1').value='6,50';$('#p2').value='7,20';$('#tri').value='4,00';$('#s').value='0,70';$('#goalMA').value='7,00';$('#goalTx').value='7,00';ACTION='fund_full';renderActions();
   }
   toast('Exemplo preenchido');
 });
-$('#btnLimpar').addEventListener('click', ()=>{
-  $$('#inputsArea input').forEach(i=>i.value='');
-  $('#goalMA').value='7,00'; $('#goalTx').value='7,00';
-  clearOutputs();
-});
-function saveLocal(){
-  const data = {
-    TAB, ACTION,
-    t1: $('#t1')?.value || '', t2: $('#t2')?.value || '',
-    p1: $('#p1')?.value || '', p2: $('#p2')?.value || '',
-    tri: $('#tri')?.value || '', s: $('#s')?.value || '',
-    goalMA: $('#goalMA').value, goalTx: $('#goalTx').value
-  };
-  localStorage.setItem('calc-notas-v3', JSON.stringify(data));
-  toast('Entradas salvas');
-}
-function loadLocal(){
-  const raw = localStorage.getItem('calc-notas-v3'); if(!raw) return toast('Nada salvo');
-  try{
-    const d = JSON.parse(raw);
-    setTab(d.TAB || 'fund');
-    ACTION = d.ACTION || (TAB==='fund'?'fund_full':'med_full');
-    setTimeout(()=>{
-      renderActions();
-      ['t1','t2','p1','p2','tri','s','goalMA','goalTx'].forEach(id=>{
-        if($('#'+id)) $('#'+id).value = d[id] ?? '';
-      });
-      // destacar ação
-      const btn = document.querySelector(`#actions [data-act="${ACTION}"]`);
-      if(btn){ [...document.querySelectorAll('#actions button')].forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
-    },0);
-    toast('Entradas carregadas');
-  }catch(e){ toast('Falha ao carregar'); }
-}
-$('#btnSalvar').addEventListener('click', saveLocal);
-$('#btnCarregar').addEventListener('click', loadLocal);
 
 /* inicialização */
-setTab('fund');      // cria campos
-renderActions();     // cria botões de ação
+function init(){
+  setTab('fund');
+}
+init();
 </script>
 </body>
 </html>
